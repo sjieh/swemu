@@ -81,6 +81,8 @@ uses level-based fallbacks where it can.
 Missing server tables/headers leave their generated tables empty. Runtime defaults
 apply where implemented; without `tb_Drop*` tables monsters drop nothing, and
 without `Scripts/AI` scripted monster AI is unavailable.
+Missing `TB_LEVELUP_POINT` data or headers leave the skill-point schedule empty,
+so positive-cost skill learning is unavailable.
 
 ## Tests
 
