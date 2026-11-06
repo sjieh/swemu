@@ -91,6 +91,9 @@ Before E2E, add the test login to `gm_accounts` in `server/swemu.json` and use
 a fresh test database. The focused scenario checks cash-shop order delivery,
 rejection without partial purchase, and the Wings of Purity costume refresh.
 
+With `--gm-user`, the E2E path also opens random box 991000994 and verifies a
+client-table Gruton Coin outcome in the refreshed inventory.
+
 ## Layout
 
 | Path | Purpose |
