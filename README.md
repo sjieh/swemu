@@ -21,6 +21,7 @@ reports and screenshots of swemu in action.
 | Login, server list, character create/delete/select, 2nd password (PIN) | basic version works, needs further development |
 | World entry, towns, NPCs, NPC shops, buy/sell/buyback, repair | basic version works, needs further development |
 | Inventory, equip, bag tools, item boxes, cash shop catalogue and atomic item delivery | basic version works, needs further development |
+| Personal storage | Bank items, Zenny, and capacities are shared account-wide across characters; initial capacities are Normal 24, Costume 48, Cash 384. Bank Sort 8/0x25 accepts selected UI groups 5/6/14 or aliases 0x10/0x11/0x12, maps them to canonical DB groups 22/23/24 (0x16/0x17/0x18), and echoes the requested group in its response. Bank stacks can be split/combined within one bank group. Item 6001026 expands Normal storage, and table-backed Add Slots 8/0x0F uses item 837000002 for Normal/Costume storage. Cash Add Slots remains unsupported |
 | Chat, gestures, GM commands (`/help`) | basic version works, needs further development |
 | Maze (dungeon) entry/exit, all mazes enterable, sectors, portals | basic version works, needs further development |
 | Level / EXP, drops and loot pickup | basic version works, needs further development |
@@ -99,6 +100,9 @@ rejection without partial purchase, and the Wings of Purity costume refresh.
 
 With `--gm-user`, the E2E path also opens random box 991000994 and verifies a
 client-table Gruton Coin outcome in the refreshed inventory.
+Without `--cash-shop-only`, the GM E2E also checks account-shared bank items,
+Zenny, and capacities after a fresh login; bank aliases/sorting; stack split/combine;
+and Add Slots. This is protocol-level coverage, not proof of actual-client UI rendering.
 
 ## Layout
 
