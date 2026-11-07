@@ -1,9 +1,7 @@
-# swemu database (SQLite, schema v6)
+# swemu database (SQLite, schema v7)
 
 One file: `run/data/swemu.db` (WAL mode: `swemu.db-wal`, `swemu.db-shm` belong to it).
-No MySQL or MSSQL. Schema is defined in `server/src/db.rs`; `PRAGMA user_version` is 6.
-V6 moves bank items, capacities, and Zenny from character ownership to account ownership.
-Account IDs start at 1000.
+No MySQL or MSSQL. Schema lives in `server/src/db.rs`; `PRAGMA user_version` is 7. Older files migrate on start: v2 rebuilds tables, v4-v6 migrate bank ownership, and v7 adds nullable character location columns in place, preserving existing rows. The AUTOINCREMENT counters are kept so ids are never reused. Account ids start at 1000.
 
 Connection settings: `journal_mode=WAL`, `synchronous=NORMAL`, `busy_timeout=5000`,
 `foreign_keys=ON`.
@@ -13,7 +11,7 @@ Connection settings: `journal_mode=WAL`, `synchronous=NORMAL`, `busy_timeout=500
 | Table | Key | What it holds |
 |---|---|---|
 | `account` | `id` | login name, Argon2id password hash, Argon2id second password (PIN) hash, cash (NULL = start amount on first read) |
-| `character` | `id`, unique (`account_id`, `slot`), unique `name` | identity (class, class_ref, outfit, appearance); progress (level 1..255, exp); currencies (zenny NULL = start amount, ether, bp, soul_vapor); skill deck meta (`deck_slots` 0..6; `deck_bonus`: four u16 values); `equip_seeded` (starter costume written once) |
+| `character` | `id`, unique (`account_id`, `slot`), unique `name` | identity (class, class_ref, outfit, appearance); progress (level 1..255, exp); currencies (zenny NULL = start amount, ether, bp, soul_vapor); skill deck meta (`deck_slots` 0..6; `deck_bonus`: four u16 values); `equip_seeded` (starter costume written once); nullable saved logout Spot (map, XYZ, rotation, jump; all NULL until saved) |
 | `item` | `id`, unique owner/storage/slot | Character-owned storage 0 = equipped, 1+ = bags, 13 = Costume bag; account-owned storage 0x16/0x17/0x18 = Normal/Costume/Cash banks; 255 = temporary during swaps; count >= 1 |
 | `storage_capacity` | (`account_id`, `storage`) | Account-wide bank capacity keyed by storage group: 0x16 Normal (24 slots initially), 0x17 Costume (48), 0x18 Cash (384); persisted capacity cannot exceed the client signed-i16 limit of 32767 |
 | `bank_zenny` | `account_id` | Account-wide bank Zenny balance stored as decimal text; client transfer/update fields are u64 and cannot represent balances above `u64::MAX` (18,446,744,073,709,551,615) |
