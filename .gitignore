@@ -28,3 +28,7 @@ re/out/
 .venv/
 __pycache__/
 *.pyc
+
+# omp
+.omp/RULES.md
+WATCHDOG.yml
